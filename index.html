@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MoTo">
+  <meta name="theme-color" content="#ff6b00">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>MoTo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a0f; overflow: hidden; -webkit-user-select: none; user-select: none; }
+    #splash {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0a0a0f;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      transition: opacity 0.5s;
+    }
+    #splash .logo { font-size: 64px; font-weight: 700; color: #ff6b00; letter-spacing: 4px; }
+    #splash .sub { font-size: 16px; color: #8a8a9a; margin-top: 8px; }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="splash">
+    <div class="logo">MoTo</div>
+    <div class="sub">Dashboard se načítá…</div>
+  </div>
+  <div id="root"></div>
+  <script type="text/babel" src="MotoGauge_45.js" async></script>
+  <script>
+    // Hide splash when app renders
+    const observer = new MutationObserver(() => {
+      if (document.getElementById('root').children.length > 0) {
+        const splash = document.getElementById('splash');
+        if (splash) { splash.style.opacity = '0'; setTimeout(() => splash.remove(), 500); }
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.getElementById('root'), { childList: true });
+    // Register service worker
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+  </script>
+</body>
+</html>
